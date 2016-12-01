@@ -16,6 +16,7 @@ extern crate slab;
 
 mod result;
 mod protocol;
+mod frame;
 
 /*
 

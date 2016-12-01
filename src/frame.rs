@@ -1,11 +1,10 @@
 use std::fmt;
 use std::mem::transmute;
-use std::io::{Cursor, Read, Write};
+use std::io::{Cursor, Read, Write, ErrorKind};
 use std::default::Default;
 use std::iter::FromIterator;
 
 use rand;
-use mio::TryRead;
 
 use result::{Result, Error, Kind};
 use protocol::{OpCode, CloseCode};
@@ -329,8 +328,17 @@ impl Frame {
 
         let mut data = Vec::with_capacity(length as usize);
         if length > 0 {
-            if let Some(read) = try!(cursor.try_read_buf(&mut data)) {
-                debug_assert!(read == length as usize, "Read incorrect payload length!");
+            match cursor.read(&mut data) {
+                Ok(read) => {
+                    debug_assert!(read == length as usize, "Read incorrect payload length!");
+                }
+                Err(err) => {
+                    if let ErrorKind::WouldBlock = err.kind() {
+                        // do nothing - TODO is it correct?
+                    } else {
+                        return Err(Error::from(err))
+                    }
+                }
             }
         }
 
