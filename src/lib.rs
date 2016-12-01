@@ -17,6 +17,9 @@ extern crate slab;
 mod result;
 mod protocol;
 mod frame;
+mod handshake;
+mod util;
+mod message;
 
 /*
 
