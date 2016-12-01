@@ -11,7 +11,7 @@ use mio;
 #[cfg(feature="ssl")]
 use openssl::ssl::error::SslError;
 
-use communication::Command;
+//use communication::Command;
 
 pub type Result<T> = StdResult<T, Error>;
 
@@ -41,14 +41,18 @@ pub enum Kind {
     /// This kind of error should only occur during a WebSocket Handshake, and a HTTP 500 response
     /// will be generated.
     Http(httparse::Error),
+
+    /*
     /// Indicates a failure to send a signal on the internal EventLoop channel. This means that
     /// the WebSocket is overloaded. In order to avoid this error, it is important to set
     /// `Settings::max_connections` and `Settings:queue_size` high enough to handle the load.
     /// If encountered, retuning from a handler method and waiting for the EventLoop to consume
     /// the queue may relieve the situation.
     Queue(mio::NotifyError<Command>),
+    */
+
     /// Indicates a failure to schedule a timeout on the EventLoop.
-    Timer(mio::TimerError),
+    Timer(mio::timer::TimerError),
     /// Indicates a failure to perform SSL encryption.
     #[cfg(feature="ssl")]
     Ssl(SslError),
@@ -116,7 +120,7 @@ impl StdError for Error {
             Kind::Http(_)          => "Unable to parse HTTP",
             #[cfg(feature="ssl")]
             Kind::Ssl(ref err)      => err.description(),
-            Kind::Queue(_)          => "Unable to send signal on event loop",
+            // Kind::Queue(_)          => "Unable to send signal on event loop",
             Kind::Timer(_)          => "Unable to schedule timeout on event loop",
             Kind::Custom(ref err)   => err.description(),
         }
@@ -158,6 +162,7 @@ impl From<httparse::Error> for Error {
 
 }
 
+/*
 impl From<mio::NotifyError<Command>> for Error {
 
     fn from(err: mio::NotifyError<Command>) -> Error {
@@ -168,10 +173,11 @@ impl From<mio::NotifyError<Command>> for Error {
     }
 
 }
+*/
 
-impl From<mio::TimerError> for Error {
+impl From<mio::timer::TimerError> for Error {
 
-    fn from(err: mio::TimerError) -> Error {
+    fn from(err: mio::timer::TimerError) -> Error {
         match err {
             _ => Error::new(Kind::Timer(err), "")
         }

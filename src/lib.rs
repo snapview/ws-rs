@@ -15,6 +15,11 @@ extern crate slab;
 #[macro_use] extern crate log;
 
 mod result;
+mod protocol;
+
+/*
+
+mod result;
 mod connection;
 mod handler;
 mod factory;
@@ -382,3 +387,4 @@ impl Builder {
         self
     }
 }
+*/
