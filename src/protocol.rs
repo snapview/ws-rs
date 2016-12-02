@@ -98,15 +98,13 @@ pub enum CloseCode {
     /// endpoint that understands only text data MAY send this if it
     /// receives a binary message).
     Unsupported,
-    /// Indicates that no status code was included in a closing frame. This
-    /// close code makes it possible to use a single method, `on_close` to
-    /// handle even cases where no close code was provided.
+    /// Indicates that no status code was included in a closing frame.
     Status,
-    /// Indicates an abnormal closure. If the abnormal closure was due to an
-    /// error, this close code will not be used. Instead, the `on_error` method
-    /// of the handler will be called with the error. However, if the connection
-    /// is simply dropped, without an error, this close code will be sent to the
-    /// handler.
+    /// Is a reserved value and MUST NOT be set as a status code in a
+    /// Close control frame by an endpoint. It is designated for use in
+    /// applications expecting a status code to indicate that the
+    /// connection was closed abnormally, e.g., without sending or
+    /// receiving a Close control frame.
     Abnormal,
     /// Indicates that an endpoint is terminating the connection
     /// because it has received data within a message that was not
@@ -135,14 +133,20 @@ pub enum CloseCode {
     /// it encountered an unexpected condition that prevented it from
     /// fulfilling the request.
     Error,
-    /// Indicates that the server is restarting. A client may choose to reconnect,
-    /// and if it does, it should use a randomized delay of 5-30 seconds between attempts.
+    /// [NOT PART OF THE RFC] Indicates that the server is restarting.
+    /// A client may choose to reconnect, and if it does, it should use a
+    /// randomized delay of 5-30 seconds between attempts.
     Restart,
-    /// Indicates that the server is overloaded and the client should either connect
-    /// to a different IP (when multiple targets exist), or reconnect to the same IP
-    /// when a user has performed an action.
+    /// [NOT PART OF THE RFC] Indicates that the server is overloaded
+    /// and the client should either connect to a different IP (when multiple
+    /// targets exist), or reconnect to the same IP when a user has performed
+    /// an action.
     Again,
-    #[doc(hidden)]
+    /// Is a reserved value and MUST NOT be set as a status code in a
+    /// Close control frame by an endpoint. It is designated for use in
+    /// applications expecting a status code to indicate that the
+    /// connection was closed due to a failure to perform a TLS handshake
+    /// (e.g., the server certificate can't be verified).
     Tls,
     #[doc(hidden)]
     Empty,
