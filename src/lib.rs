@@ -15,11 +15,16 @@ extern crate slab;
 #[macro_use] extern crate log;
 
 mod result;
+// mod connection;
 mod handler;
+// mod factory;
 mod frame;
 mod message;
 mod handshake;
 mod protocol;
+// mod communication;
+// mod io;
+// mod stream;
 
 #[cfg(feature="permessage-deflate")]
 pub mod deflate;
@@ -27,23 +32,6 @@ pub mod deflate;
 pub mod util;
 
 /*
-
-mod result;
-mod connection;
-mod handler;
-mod factory;
-mod frame;
-mod message;
-mod handshake;
-mod protocol;
-mod communication;
-mod io;
-mod stream;
-
-#[cfg(feature="permessage-deflate")]
-pub mod deflate;
-
-pub mod util;
 
 pub use factory::Factory;
 pub use handler::Handler;
