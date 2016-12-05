@@ -1,7 +1,7 @@
 use url;
 use log::LogLevel::Error as ErrorLevel;
 #[cfg(feature="ssl")]
-use openssl::ssl::{Ssl, SslContext, SslMethod};
+use openssl::ssl::{Ssl, SslContextBuilder, SslMethod};
 
 use message::Message;
 use frame::Frame;
@@ -275,7 +275,7 @@ pub trait Handler {
     #[inline]
     #[cfg(feature="ssl")]
     fn build_ssl(&mut self) -> Result<Ssl> {
-        let context = try!(SslContext::new(SslMethod::Tlsv1));
+        let context = try!(SslContextBuilder::new(SslMethod::tls())).build();
         Ssl::new(&context).map_err(Error::from)
     }
 }

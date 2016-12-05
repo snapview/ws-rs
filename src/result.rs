@@ -9,7 +9,7 @@ use std::convert::{From, Into};
 use httparse;
 use mio;
 #[cfg(feature="ssl")]
-use openssl::ssl::error::SslError;
+use openssl::error::ErrorStack as SslErrorStack;
 
 //use communication::Command;
 
@@ -55,7 +55,7 @@ pub enum Kind {
     Timer(mio::timer::TimerError),
     /// Indicates a failure to perform SSL encryption.
     #[cfg(feature="ssl")]
-    Ssl(SslError),
+    Ssl(SslErrorStack),
     /// A custom error kind for use by applications. This error kind involves extra overhead
     /// because it will allocate the memory on the heap. The WebSocket ignores such errors by
     /// default, simply passing them to the Connection Handler.
@@ -192,8 +192,8 @@ impl From<Utf8Error> for Error {
 }
 
 #[cfg(feature="ssl")]
-impl From<SslError> for Error {
-    fn from(err: SslError) -> Error {
+impl From<SslErrorStack> for Error {
+    fn from(err: SslErrorStack) -> Error {
         Error::new(Kind::Ssl(err), "")
     }
 }

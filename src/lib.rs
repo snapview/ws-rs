@@ -15,11 +15,16 @@ extern crate slab;
 #[macro_use] extern crate log;
 
 mod result;
-mod protocol;
+mod handler;
 mod frame;
-mod handshake;
-mod util;
 mod message;
+mod handshake;
+mod protocol;
+
+#[cfg(feature="permessage-deflate")]
+pub mod deflate;
+
+pub mod util;
 
 /*
 
